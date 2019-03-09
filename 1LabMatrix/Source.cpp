@@ -85,7 +85,7 @@ public:
 			exit(1);//Уточнить, нормально ли использовать exit()
 		}
 
-		Matrix n(r1);
+		const Matrix n(r1);
 		for (int i = 0; i < r1.size1; i++)
 		{
 			for (int j = 0; j < r1.size2; j++)
@@ -124,7 +124,7 @@ public:
 			exit(1);
 		}
 
-		Matrix n(r1);
+		const Matrix n(r1);
 		for (int i = 0; i < r1.size1; i++)
 		{
 			for (int j = 0; j < r1.size2; j++)
@@ -262,7 +262,7 @@ public:
 			exit(1);
 		}
 
-		Matrix n(r2.size2, r1.size1);
+		const Matrix n(r2.size2, r1.size1);
 		for (int i = 0; i < n.size1; i++)
 		{
 			for (int j = 0; j < n.size2; j++)
@@ -284,7 +284,7 @@ public:
 			exit(1);
 		}
 
-		Matrix n(*this);
+		const Matrix n(*this);
 
 		for (int i = 0; i < size1; i++)
 		{
@@ -318,8 +318,7 @@ public:
 
 	Matrix& Transpose()
 	{
-
-		Matrix n(this->size2, this->size1);
+		const Matrix n(this->size2, this->size1);
 		//	auto n = std::make_unique<Matrix>(r1.size2, r1.size1);
 		for (int i = 0; i < n.size1; i++)
 		{
@@ -330,6 +329,38 @@ public:
 		}
 
 		*this = n;
+		return *this;
+	}
+
+	friend Matrix operator*(const Matrix& r1, const int a)
+	{
+		const Matrix n(r1);
+
+		for (int i = 0; i < n.size1; i++)
+		{
+			for (int j = 0; j < n.size2; j++)
+			{
+				n.array[i][j] *= a;
+			}
+		}
+		return Matrix(n);
+	}
+
+	friend Matrix operator * (int p, const Matrix& a)
+	{
+		return a * p;
+	}
+
+	Matrix& operator*= (const int a)
+	{
+		for (int i = 0; i < size1; i++)
+		{
+			for (int j = 0; j < size2; j++)
+			{
+				this->array[i][j] *= a;
+			}
+		}
+
 		return *this;
 	}
 };
@@ -348,7 +379,17 @@ int main()
 	std::cout << B;
 	A = B + (A + B);
 	std::cout << A;
-	A = B * (A + B);
+	Matrix C(B);
+	std::cout << C;
+	A.Transpose();
+	B.Transpose();
+	std::cout << A + B;
+	A = C * (A + B);
+	std::cout << A;
+
+	std::cout << A * 2;
+	std::cout << 2 * A;
+	A *= 3;
 	std::cout << A;
 
 	system("pause");
