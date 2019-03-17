@@ -26,11 +26,13 @@ public:
 			size2_ = x;
 			size1_ = y;
 		}
+
 		array_ = new int*[size1_];
 		for (auto i = 0; i < size1_; i++)
 		{
 			array_[i] = new int[size2_];
 		}
+
 		for (auto i = 0; i < size1_; i++)
 		{
 			for (auto j = 0; j < size2_; j++)
@@ -74,6 +76,10 @@ public:
 
 	int getSize() const;
 
+	int getSize1() const;
+
+	int getSize2() const;
+
 	friend matrix operator+ (const matrix& r1, const matrix& r2);
 
 	matrix& operator+= (const matrix &r);
@@ -105,4 +111,6 @@ public:
 	int search_count(const int a) const;
 
 	double search_frequency(const int a) const;
+
+	int* operator[] (const int i) const;
 };

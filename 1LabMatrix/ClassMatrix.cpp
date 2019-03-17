@@ -1,17 +1,24 @@
-#include "HeaderForClassMatrix.h"
-#include <conio.h>
+#include "Header.h"
 
 int matrix::getSize() const
 {
 	return size1_ * size2_;
 }
 
+int matrix::getSize1() const
+{
+	return size1_;
+}
+
+int matrix::getSize2() const
+{
+	return size2_;
+}
+
 matrix operator+ (const matrix& r1, const matrix& r2) {
 	if (!(r1.size1_ == r2.size1_ && r1.size2_ == r2.size2_))
 	{
-		std::cout << "Matrix sizes are different!\n";
-		_getch();
-		exit(1);
+		throw std::invalid_argument("Error! Matrix sizes are different");
 	}
 
 	const matrix tmp(r1);
@@ -22,16 +29,14 @@ matrix operator+ (const matrix& r1, const matrix& r2) {
 			tmp.array_[i][j] += r2.array_[i][j];
 		}
 	}
-	return matrix(tmp);
+	return tmp;
 }
 
 matrix operator-(const matrix& r1, const matrix& r2)
 {
 	if (!(r1.size1_ == r2.size1_ && r1.size2_ == r2.size2_))
 	{
-		std::cout << "Matrix sizes are different!\n";
-		_getch();
-		exit(1);
+		throw std::invalid_argument("Error! Matrix sizes are different");
 	}
 
 	const matrix tmp(r1);
@@ -42,7 +47,7 @@ matrix operator-(const matrix& r1, const matrix& r2)
 			tmp.array_[i][j] -= r2.array_[i][j];
 		}
 	}
-	return matrix(tmp);
+	return tmp;
 }
 
 std::ostream& operator<< (std::ostream &out, const matrix &obj)
@@ -63,29 +68,20 @@ std::ostream& operator<< (std::ostream &out, const matrix &obj)
 
 std::istream& operator>> (std::istream & in, matrix &obj)
 {
-	try
+	for (auto i = 0; i < obj.size1_; i++)
 	{
-		for (auto i = 0; i < obj.size1_; i++)
+		for (auto j = 0; j < obj.size2_; j++)
 		{
-			for (auto j = 0; j < obj.size2_; j++)
+			if (!(in >> obj.array_[i][j]))
 			{
-				if (!(in >> obj.array_[i][j]))
+				in.clear();
+				while (in.get() != '\n')
 				{
-					throw std::runtime_error("Runtime error!");
-				};
-			}
+					;
+				}
+				throw std::runtime_error("Runtime error! Incorrect input");
+			};
 		}
-	}
-	catch (const std::exception &e)
-	{
-		std::cout << e.what() << std::endl;
-		in.clear();
-		while (in.get() != '\n')
-		{
-			;
-		}
-		_getch();
-		exit(1);
 	}
 
 	return in;
@@ -95,9 +91,7 @@ matrix operator*(const matrix& r1, const matrix& r2)
 {
 	if (!(r1.size2_ == r2.size1_))
 	{
-		std::cout << "Matrices can not be multiplied!\n";
-		_getch();
-		exit(1);
+		throw std::invalid_argument("Error! Matrices can not be multiplied!");
 	}
 
 	const matrix tmp(r2.size2_, r1.size1_);
@@ -110,7 +104,7 @@ matrix operator*(const matrix& r1, const matrix& r2)
 				tmp.array_[i][j] += r1.array_[i][k] * r2.array_[k][j];
 		}
 	}
-	return matrix(tmp);
+	return tmp;
 }
 
 matrix operator*(const matrix& r1, const int a)
@@ -124,7 +118,7 @@ matrix operator*(const matrix& r1, const int a)
 			tmp.array_[i][j] *= a;
 		}
 	}
-	return matrix(tmp);
+	return tmp;
 }
 
 matrix operator* (const int a, const matrix& r1)
@@ -137,9 +131,7 @@ matrix& matrix::operator+= (const matrix &r)
 {
 	if (size1_ != r.size1_ || size2_ != r.size2_)
 	{
-		std::cout << "Matrix sizes are different!\n";
-		_getch();
-		exit(1);
+		throw std::invalid_argument("Error! Matrix sizes are different");
 	}
 
 	for (auto i = 0; i < size1_; i++)
@@ -156,9 +148,7 @@ matrix& matrix::operator-= (const matrix &r)
 {
 	if (size1_ != r.size1_ || size2_ != r.size2_)
 	{
-		std::cout << "Matrix sizes are different!\n";
-		_getch();
-		exit(1);
+		throw std::invalid_argument("Error! Matrix sizes are different");
 	}
 
 	for (auto i = 0; i < size1_; i++)
@@ -170,7 +160,6 @@ matrix& matrix::operator-= (const matrix &r)
 	}
 	return *this;
 }
-
 
 matrix& matrix::operator= (const matrix& r)
 {
@@ -228,9 +217,7 @@ matrix& matrix::operator*= (const matrix &r)
 {
 	if (size2_ != r.size1_)
 	{
-		std::cout << "Matrices can not be multiplied!\n";
-		system("pause");
-		exit(1);
+		throw std::invalid_argument("Error! Matrices can not be multiplied!");
 	}
 
 	const matrix tmp(*this);
@@ -312,4 +299,13 @@ int matrix::search_count(const int a) const
 double matrix::search_frequency(const int a) const
 {
 	return this->search_count(a) * 1. / this->getSize();
+}
+
+int* matrix::operator[] (const int i) const
+{
+	if (i < 0 || i >= this->getSize1())
+	{
+		throw std::runtime_error("Error! Invalid index!");
+	}
+	return array_[i];
 }
