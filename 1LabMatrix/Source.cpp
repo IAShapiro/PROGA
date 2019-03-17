@@ -1,25 +1,29 @@
 #include <iostream>
 #include <iomanip>
-#include "Header.h"
+#include "HeaderForClassMatrix.h"
 
 int main()
 {
-	Matrix A(3, 2);
 
+	matrix A(3, 2);
+	std::cout << "Input elements of matrix(right to left, top to bottom), separated by space or \"Enter\":" << std::endl;
 	std::cin >> A;
-	Matrix B(A);
+	matrix B(A);
 	std::cout << A;
-	B += (A + B);
-	B.Transpose();
+	std::cout << A.search_count(1) << A.search_frequency(1) << std::endl;
+	B = B - A;
 	std::cout << B;
-	B.Transpose();
+	B -= (2 * A + B);
+	B.transpose();
+	std::cout << B;
+	B.transpose();
 	std::cout << B;
 	A = B + (A + B);
 	std::cout << A;
-	Matrix C(B);
+	matrix C(B);
 	std::cout << C;
-	A.Transpose();
-	B.Transpose();
+	A.transpose();
+	B.transpose();
 	std::cout << A + B;
 	A = C * (A + B);
 	std::cout << A;
