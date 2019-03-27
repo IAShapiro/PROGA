@@ -79,7 +79,7 @@ std::istream& operator>> (std::istream & in, matrix &obj)
 				{
 					;
 				}
-				throw std::runtime_error("Runtime error! Incorrect input");
+				throw exception e("Runtime error! Incorrect input");
 			};
 		}
 	}
