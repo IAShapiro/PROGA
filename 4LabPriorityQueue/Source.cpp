@@ -1,15 +1,13 @@
 #include <iostream>
 #include "PrQueue.h"
-//#include <queue>
 
-//-----------------------------------!!!template!!!-----------------------------------------
 int main()
 {
 	try {
-		pr_queue a;
+		pr_queue <unsigned int> a;
 		for (auto i = 0; i < 15; i++)
 		{
-			a.enqueue(i);
+			a.enqueue(-12);
 		}
 		/*a.enqueue(-457);
 		a.enqueue(1);
@@ -35,7 +33,8 @@ int main()
 	catch (std::exception e)
 	{
 		std::cout << e.what() << std::endl;
-		system("pause");exit(1); 
+		system("pause");
+		exit(1);
 	}
 
 	system("pause");
