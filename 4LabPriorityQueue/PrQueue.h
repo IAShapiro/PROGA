@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <queue>
 
 template <typename T>
 class pr_queue {
@@ -81,7 +82,7 @@ public:
 		source.arr_ = nullptr;
 	}
 
-	void enqueue(const T value)
+	void push(const T value)
 	{
 		if (size_ % max_size == 0 && size_ != 0)
 		{
@@ -97,7 +98,7 @@ public:
 		up(size_ - 1);
 	}
 
-	bool dequeue()
+	bool pop()
 	{
 		if (size_ <= 0)
 		{
@@ -109,18 +110,23 @@ public:
 		return true;
 	}
 
-	bool is_empty() const
+	bool empty() const
 	{
 		return size_ == 0;
 	}
 
 	T & top()
 	{
-		if (size_ == 0)
+		if (this->empty())
 		{
 			throw std::out_of_range("List is empty");
 		}
 		return this->arr_[0];
+	}
+
+	int size() const
+	{
+		return size_;
 	}
 };
 
