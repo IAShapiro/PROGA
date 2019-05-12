@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../MatrixMulThread/Matrix.h"
+#include "../MatrixMulThread/Matrix.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -40,22 +41,31 @@ namespace UnitTest1
 
 		TEST_METHOD(TestMethod2)
 		{
-			matrix A(2, 3), B(2, 3);
-			for (auto i = 0; i < A.getSize1(); i++)
+			try
 			{
-				for (auto j = 0; j < A.getSize2(); j++)
+				matrix A(2, 3), B(2, 3);
+				for (auto i = 0; i < A.getSize1(); i++)
 				{
-					A[i][j] = i + j;
+					for (auto j = 0; j < A.getSize2(); j++)
+					{
+						A[i][j] = i + j;
+					}
 				}
+				for (auto i = 0; i < B.getSize1(); i++)
+				{
+					for (auto j = 0; j < B.getSize2(); j++)
+					{
+						B[i][j] = i + j;
+					}
+				}
+				//Assert::ExpectException<std::exception>(A * B);
+				
+				matrix C = A * B;
 			}
-			for (auto i = 0; i < B.getSize1(); i++)
+			catch (std::exception ex)
 			{
-				for (auto j = 0; j < B.getSize2(); j++)
-				{
-					B[i][j] = i + j;
-				}
+				Assert::Fail();
 			}
-			Assert::ExpectException<std::exception>(A * B);
 		}
 
 	};

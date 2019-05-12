@@ -25,6 +25,8 @@ public:
 
 	matrix& operator= (const matrix& r);
 
+	bool operator== (const matrix &r) const;
+
 	friend std::ostream& operator<< (std::ostream &out, const matrix &obj);
 
 	friend std::istream& operator>> (std::istream & in, matrix &obj);
