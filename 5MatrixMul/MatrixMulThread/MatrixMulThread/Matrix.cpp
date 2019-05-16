@@ -122,22 +122,7 @@ std::istream& operator>> (std::istream & in, matrix &obj)
 
 matrix operator*(const matrix& r1, const matrix& r2)
 {
-	if (!(r1.size2_ == r2.size1_))
-	{
-		throw std::invalid_argument("Error! Matrices can not be multiplied!");
-	}
-
-	matrix tmp(r2.size2_, r1.size1_);
-	for (auto i = 0; i < tmp.size1_; i++)
-	{
-		for (auto j = 0; j < tmp.size2_; j++)
-		{
-			tmp.array_[i][j] = 0;
-			for (auto k = 0; k < r1.size2_; k++)
-				tmp.array_[i][j] += r1.array_[i][k] * r2.array_[k][j];
-		}
-	}
-	return tmp;
+	return matrix(r1) *= r2;
 }
 
 
@@ -200,34 +185,21 @@ matrix& matrix::operator*= (const matrix &r)
 		throw std::invalid_argument("Error! Matrices can not be multiplied!");
 	}
 
-	const matrix tmp(*this);
+	matrix tmp(size1_, r.size2_);
 
 	for (auto i = 0; i < size1_; i++)
 	{
-		delete[] array_[i];
-	}
-	delete[] array_;
-
-	size1_ = r.size1_;
-	size2_ = tmp.size2_;
-
-	array_ = new int*[size1_];
-	for (auto i = 0; i < size1_; i++)
-	{
-		array_[i] = new int[size2_];
-	}
-
-	for (auto i = 0; i < size1_; i++)
-	{
-		for (auto j = 0; j < size2_; j++)
+		for (auto j = 0; j < r.size2_; j++)
 		{
-			array_[i][j] = 0;
-			for (auto k = 0; k < tmp.size2_; k++)
+			tmp.array_[i][j] = 0;
+			for (auto k = 0; k < size2_; k++)
 			{
-				array_[i][j] += tmp.array_[i][k] * r.array_[k][j];
+				tmp.array_[i][j] += array_[i][k] * r.array_[k][j];
 			}
 		}
 	}
+
+	*this = tmp;
 
 	return *this;
 }

@@ -11,9 +11,9 @@ namespace UnitTest1
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(CorrectMul)
 		{
-			matrix A(2, 3), B(3,3), C(A.getSize1(),B.getSize2());
+			matrix A(2, 3), B(3,3), C(A.getSize1(),B.getSize2()), D;
 			for (auto i = 0; i < A.getSize1(); i++)
 			{
 				for (auto j = 0; j < A.getSize2(); j++)
@@ -35,11 +35,11 @@ namespace UnitTest1
 					C[i][j] = 3 * (i + j*(i + 1) + 2) - 1;
 				}
 			}
-			//Assert::AreEqual(A * B == C, true);
+			D = (A * B);
 			Assert::IsTrue(A * B == C);
 		}
 
-		TEST_METHOD(TestMethod2)
+		TEST_METHOD(IsError)
 		{
 			try
 			{
@@ -58,15 +58,14 @@ namespace UnitTest1
 						B[i][j] = i + j;
 					}
 				}
-				//Assert::ExpectException<std::exception>(A * B);
 				
 				matrix C = A * B;
+				Assert::Fail();
 			}
 			catch (std::exception ex)
 			{
-				Assert::Fail();
+				Assert::IsTrue(1 == 1);
 			}
 		}
-
 	};
 }
