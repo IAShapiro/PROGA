@@ -1,6 +1,8 @@
 #pragma once
 #include <iomanip>
 
+//extern int numb_of_threads;
+
 class matrix {
 	int** array_;
 	int size1_;

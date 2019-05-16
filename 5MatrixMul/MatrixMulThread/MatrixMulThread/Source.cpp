@@ -1,11 +1,13 @@
 #include <iostream>
 #include "Matrix.h"
 
+//int numb_of_threads;
+
 int main()
 {
 	try
 	{
-		matrix A(2, 3), B(2, 3), C(A.getSize1(), B.getSize2()), D(2,3);
+		matrix A(2, 3), B(3, 3), C(A.getSize1(), B.getSize2()), D(2,3);
 		for (auto i = 0; i < A.getSize1(); i++)
 		{
 			for (auto j = 0; j < A.getSize2(); j++)

@@ -1,5 +1,8 @@
 #include "Matrix.h"
 #include <iostream>
+#include <thread>
+
+int numb_of_threads = 1;
 
 matrix::matrix(matrix&& source) {
 	size1_ = source.size1_;
@@ -187,18 +190,74 @@ matrix& matrix::operator*= (const matrix &r)
 
 	matrix tmp(size1_, r.size2_);
 
+	std::thread *streams = new std::thread[numb_of_threads];
+
+	int residue = (size1_ * r.size2_) % numb_of_threads, numb_of_cell_without_res = (size1_ * r.size2_) / numb_of_threads;
+/*
+	for(int s = 0; s < numb_of_threads; s++)
+	{
+		streams[s] = std::thread([residue, s, numb_of_cell, tmp]()
+		{
+			for (int p = 0; p < (residue > s ? numb_of_cell_without_res : (numb_of_cell_without_res + 1)); p++)
+			{
+
+			}
+
+		});
+	}
+	*/
+
+	for (int s = 0; s < numb_of_threads - residue; s++)
+	{
+		streams[s] = std::thread([residue, s, numb_of_cell_without_res, &tmp, this,r]()
+		{
+			for (auto p = 0; p < numb_of_cell_without_res; p++)
+			{
+				auto i = (s * numb_of_cell_without_res + p) / (tmp.size2_);
+				auto j = (s * numb_of_cell_without_res + p) % (tmp.size2_);
+				for (auto a = 0; a < size2_; a++)
+				{
+					tmp[i][j] += this->array_[i][a] * r.array_[a][j];
+				}
+			}
+		});
+	}
+
+	for (int s = numb_of_threads - residue; s < numb_of_threads; s++)
+	{
+		streams[s] = std::thread([residue, s, numb_of_cell_without_res, &tmp, this, r]()
+		{
+			for (auto p = 0; p < numb_of_cell_without_res + 1; p++)
+			{			
+				auto i = ((numb_of_threads - residue) * numb_of_cell_without_res + (s - (numb_of_threads - residue)) * (numb_of_cell_without_res + 1) + p) / tmp.size2_;
+				auto j = ((numb_of_threads - residue) * numb_of_cell_without_res + (s - (numb_of_threads - residue)) * (numb_of_cell_without_res + 1) + p) % tmp.size2_;
+				for (auto a = 0; a < size2_; a++)
+				{
+					tmp[i][j] += this->array_[i][a] * r.array_[a][j];
+				}
+			}
+		});
+	}
+
+	for (int s = 0; s < numb_of_threads; s++)
+	{
+		streams[s].join();
+	}
+
+	//matrix tmp(size1_, r.size2_);
+	/*
 	for (auto i = 0; i < size1_; i++)
 	{
 		for (auto j = 0; j < r.size2_; j++)
 		{
-			tmp.array_[i][j] = 0;
+			//tmp.array_[i][j] = 0;
 			for (auto k = 0; k < size2_; k++)
 			{
 				tmp.array_[i][j] += array_[i][k] * r.array_[k][j];
 			}
 		}
 	}
-
+	*/
 	*this = tmp;
 
 	return *this;
