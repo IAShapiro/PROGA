@@ -2,7 +2,7 @@
 #include <iostream>
 #include <thread>
 
-int numb_of_threads = 1;
+long int numb_of_threads = 1;
 
 matrix::matrix(matrix&& source) {
 	size1_ = source.size1_;
@@ -190,9 +190,9 @@ matrix& matrix::operator*= (const matrix &r)
 
 	matrix tmp(size1_, r.size2_);
 
-	std::thread *streams = new std::thread[numb_of_threads];
+	auto streams = new std::thread[numb_of_threads];
 
-	int residue = (size1_ * r.size2_) % numb_of_threads, numb_of_cell_without_res = (size1_ * r.size2_) / numb_of_threads;
+	auto residue = (size1_ * r.size2_) % numb_of_threads, numb_of_cell_without_res = (size1_ * r.size2_) / numb_of_threads;
 /*
 	for(int s = 0; s < numb_of_threads; s++)
 	{
@@ -207,9 +207,9 @@ matrix& matrix::operator*= (const matrix &r)
 	}
 	*/
 
-	for (int s = 0; s < numb_of_threads - residue; s++)
+	for (auto s = 0; s < numb_of_threads - residue; s++)
 	{
-		streams[s] = std::thread([residue, s, numb_of_cell_without_res, &tmp, this,r]()
+		streams[s] = std::thread([s, numb_of_cell_without_res, &tmp, this,r]()
 		{
 			for (auto p = 0; p < numb_of_cell_without_res; p++)
 			{
@@ -223,14 +223,14 @@ matrix& matrix::operator*= (const matrix &r)
 		});
 	}
 
-	for (int s = numb_of_threads - residue; s < numb_of_threads; s++)
+	for (auto s = numb_of_threads - residue; s < numb_of_threads; s++)
 	{
 		streams[s] = std::thread([residue, s, numb_of_cell_without_res, &tmp, this, r]()
 		{
 			for (auto p = 0; p < numb_of_cell_without_res + 1; p++)
-			{			
-				auto i = ((numb_of_threads - residue) * numb_of_cell_without_res + (s - (numb_of_threads - residue)) * (numb_of_cell_without_res + 1) + p) / tmp.size2_;
-				auto j = ((numb_of_threads - residue) * numb_of_cell_without_res + (s - (numb_of_threads - residue)) * (numb_of_cell_without_res + 1) + p) % tmp.size2_;
+			{		/*((numb_of_threads - residue) * numb_of_cell_without_res + (s - (numb_of_threads - residue)) * (numb_of_cell_without_res + 1) + p)*/	
+				auto i = (s * (numb_of_cell_without_res + 1) - numb_of_threads + residue + p) / tmp.size2_;
+				auto j = (s * (numb_of_cell_without_res + 1) - numb_of_threads + residue + p) % tmp.size2_;
 				for (auto a = 0; a < size2_; a++)
 				{
 					tmp[i][j] += this->array_[i][a] * r.array_[a][j];
@@ -239,7 +239,7 @@ matrix& matrix::operator*= (const matrix &r)
 		});
 	}
 
-	for (int s = 0; s < numb_of_threads; s++)
+	for (auto s = 0; s < numb_of_threads; s++)
 	{
 		streams[s].join();
 	}
