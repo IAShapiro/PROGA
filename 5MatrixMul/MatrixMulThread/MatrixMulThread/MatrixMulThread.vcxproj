@@ -122,7 +122,11 @@
     <ClInclude Include="Matrix.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="report 5.txt" />
     <Text Include="report.txt" />
+    <Text Include="report2.txt" />
+    <Text Include="report3.txt" />
+    <Text Include="report4.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

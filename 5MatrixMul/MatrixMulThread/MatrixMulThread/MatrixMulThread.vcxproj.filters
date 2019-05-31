@@ -31,5 +31,17 @@
     <Text Include="report.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="report2.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="report3.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="report4.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="report 5.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

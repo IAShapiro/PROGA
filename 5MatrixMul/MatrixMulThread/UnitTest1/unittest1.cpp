@@ -61,6 +61,7 @@ namespace UnitTest1
 				
 				matrix C = A * B;
 				Assert::Fail();
+				//Assert::ExpectException<std::invalid_argument>([A, B]() { A * B; });
 			}
 			catch (std::exception ex)
 			{

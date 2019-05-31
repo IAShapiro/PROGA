@@ -6,6 +6,7 @@
 
 int main()
 {
+	setlocale(LC_NUMERIC, "Rus");
 	clock_t start, end;
 	try
 	{
@@ -58,7 +59,6 @@ int main()
 				B[i][j] = rand() % 4;
 			}
 		}
-		C = A * B;
 		for (numb_of_threads = 1; numb_of_threads < static_cast<int>(pow(2, 5)); numb_of_threads ++)
 		{
 			start = clock();
